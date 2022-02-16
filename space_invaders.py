@@ -1,5 +1,6 @@
 import pygame
 import os
+import random
 
 # Window Init
 pygame.init()
@@ -22,15 +23,38 @@ PLAYER_VEL = 5
 # Bullet Variables
 BULLET_VEL = 7
 max_player_bullets = 10
+# Enemies variables
+switch_enemy_movement = pygame.USEREVENT + 1
+
+class Enemy:
+    def __init__(self, x, y, lives, bullets):
+        self.x = x
+        self.y = y
+        self.lives = lives
+        self.bullets = bullets
+    
+    def handle_movement(self, x_direction, y_direction):
+        if 0 <= self.x <= SCREEN_SIZE[0] - PLAYER_SIZE[0]:
+            self.x += x_direction
+        if 0 <= self.y <= 300:
+            self.y += y_direction  
+        
+        print(self.x, self.y)
+    def handle_bullets(self):
+        pass
+
+
+ENEMY_IMG = pygame.transform.scale(pygame.image.load(os.path.join('Assets', 'enemy.png')), PLAYER_SIZE)
 
 # Drawing all elements
-def draw_window(player, player_bullets):
+def draw_window(player, enemies, player_bullets, x_direction = 0, y_direction = 0):
     WIN.blit(PLAYER, (player.x, player.y))
+    for enemy in enemies:
+        enemy.handle_movement(x_direction, y_direction)
+        WIN.blit(ENEMY_IMG, (enemy.x , enemy.y))
     for bullet in player_bullets:
         pygame.draw.rect(WIN, YELLOW, bullet)
-
     pygame.display.update()
-
 
 # Player movement
 def handle_player_movement(player, pressed_keys):
@@ -48,17 +72,23 @@ def handle_player_bullets(player_bullets):
     for bullet in player_bullets:
         bullet.y -= BULLET_VEL
         if bullet.y < 0:
-            player_bullets.remove(bullet)
-
+            player_bullets.remove(bullet)  
 
 def main():
     run = True
     clock = pygame.time.Clock()
+    bg_move = 0
+    interval = 700
+    pygame.time.set_timer(switch_enemy_movement , interval)
+    x_direction = 2
+    y_direction = 0
+    # Player variables
     player = pygame.Rect(SCREEN_SIZE[0]//2 - PLAYER.get_width(), SCREEN_SIZE[1] - PLAYER_SIZE[0], PLAYER_SIZE[0], PLAYER_SIZE[1])
     player_bullets = []
-    bg_move = 0
+    # Enemies variables
+    enemy1 = Enemy(200,100, 3, [])
+    enemies = [enemy1]
     while run:
-
         clock.tick(FPS)
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
@@ -70,6 +100,10 @@ def main():
                         bullet_rect = pygame.Rect(
                             player.x + 10, player.y, 3, 10)
                         player_bullets.append(bullet_rect)
+            if event.type == switch_enemy_movement:
+                interval = random.randint(1000, 2000)
+                x_direction = random.randint(-2, 2)
+                y_direction = random.randint(-2, 2)
 
             pressed_keys = pygame.key.get_pressed()
         # Background Loop
@@ -82,7 +116,7 @@ def main():
         # ----------------
         handle_player_movement(player, pressed_keys)
         handle_player_bullets(player_bullets)
-        draw_window(player, player_bullets)
+        draw_window(player, enemies, player_bullets, x_direction, y_direction)
 
 
 if __name__ == '__main__':
