@@ -1,4 +1,4 @@
-### Try of making pygame game on my own
+# Try of making pygame game on my own
 
 ## Information
 
@@ -9,4 +9,8 @@ I know I made it not the best way (realised it in the process), but I wanted to 
 - ! I understood that I should think about the way I want to make my project instead of just writing the code.
 - ! I understood how important is writing clean code and how to do it
 
-# Second Version:
+## Screenshoots
+
+![Game Screenshoot](./.github/screenshoots/screen_1.PNG)
+
+## Second Version:
