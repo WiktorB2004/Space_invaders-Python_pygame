@@ -28,7 +28,7 @@ PLAYER = pygame.transform.rotate(pygame.transform.scale(
 PLAYER_VEL = 5
 player_lives = 3
 # Bullet Variables
-BULLET_VEL = 7
+BULLET_VEL = 6
 max_player_bullets = 10
 # Enemy variables
 ENEMY_SIZE: tuple = 60, 50
